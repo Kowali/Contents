@@ -1,6 +1,6 @@
 {
     "name": "kowali/contents",
-    "description": "The core of the Kowali CMF",
+    "description": "The base of the Kowali CMF: base models and facilities",
     "license": "MIT",
     "authors": [
         {

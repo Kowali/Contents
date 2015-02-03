@@ -1,4 +1,4 @@
-Kowali Migrations
+Kowali Contents
 ====================
 
-The utility class to create migrations and apply theme to Eloquent schemas
+The base of the Kowali CMF: base models and facilities
