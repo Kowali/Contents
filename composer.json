@@ -1,0 +1,22 @@
+{
+    "name": "kowali/contents",
+    "description": "The core of the Kowali CMF",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Hupkens",
+            "email": "thomas@hupkens.be"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*",
+        "hpkns/front-matter": "1.0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kowali\\Migrations\\" : "src/Kowali/Migrations/"
+        }
+    },
+    "minimum-stability": "stable"
+}
