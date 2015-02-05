@@ -11,12 +11,15 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
-        "hpkns/front-matter": "1.0.4"
+        "dimsav/laravel-translatable": "4.*"
     },
     "autoload": {
         "psr-4": {
-            "Kowali\\Migrations\\" : "src/Kowali/Migrations/"
-        }
+            "Kowali\\Contents\\" : "src/Kowali/Contents/"
+        },
+		"classmap": [
+			"src/migrations"
+		]
     },
     "minimum-stability": "stable"
 }

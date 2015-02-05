@@ -9,7 +9,7 @@ class Content extends StiBase {
         Traits\CreatedTimeTrait,
         Traits\MetaableTrait,
         Traits\FeatureImageTrait,
-        SoftDeletingTrait;
+        \SoftDeletingTrait;
 
     /**
      * The name of the database fields that indicates the class name of the object.
@@ -30,14 +30,14 @@ class Content extends StiBase {
      *
      * @var array
      */
-    protected $fillable = ['user_id', '_content', 'content_model'];
+    protected $fillable = ['tid', 'user_id', 'content_id', 'order', '_content', 'content_model', 'status'];
 
     /**
      * Dimsav\Translatable: the name of the translation model.
      *
      * @var string
      */
-    public $translationModel = 'Home\Models\ContentTranslation';
+    public $translationModel = 'Kowali\Contents\Models\ContentTranslation';
 
     /**
      * Dimsav\Translatable: Foreign key.
@@ -65,7 +65,7 @@ class Content extends StiBase {
      *
      * @var string
      */
-    protected $stiBaseClass = 'Home\Models\Content';
+    protected $stiBaseClass = 'Kowali\Contents\Models\Content';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -150,7 +150,7 @@ class Content extends StiBase {
      */
     public function comments()
     {
-        return $this->morphMany('Home\Models\Comment','commentable')->orderBy('created_at', 'ASC');
+        return $this->morphMany('Kowali\Contents\Models\Comment','commentable')->orderBy('created_at', 'ASC');
     }
 
     /**
@@ -160,6 +160,6 @@ class Content extends StiBase {
      */
     public function terms()
     {
-        return $this->belongsToMany('Home\Models\Term', 'content_term', 'content_id');
+        return $this->belongsToMany('Kowali\Contents\Models\Term', 'content_term', 'content_id');
     }
 }

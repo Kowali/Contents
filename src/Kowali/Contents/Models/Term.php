@@ -1,6 +1,6 @@
 <?php namespace Kowali\Contents\Models;
 
-class Term extends \Eloquent {
+class Term extends BaseModel {
 	protected $fillable = [];
 
     use \Dimsav\Translatable\Translatable;

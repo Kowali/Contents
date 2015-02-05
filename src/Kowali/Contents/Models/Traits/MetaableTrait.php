@@ -1,4 +1,4 @@
-<?php namespace Home\Models\Traits\Traits;
+<?php namespace Kowali\Contents\Models\Traits;
 
 trait MetaableTrait {
 
@@ -9,7 +9,7 @@ trait MetaableTrait {
      */
     public function metas()
     {
-        return $this->morphMany('Home\Models\Meta', 'metaable');
+        return $this->morphMany('Kowali\Contents\Models\Meta', 'metaable');
     }
 
     public function getMeta($key)

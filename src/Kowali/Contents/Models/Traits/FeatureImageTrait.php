@@ -1,4 +1,4 @@
-<?php namespace Home\Models\Traits\Traits;
+<?php namespace Kowali\Contents\Models\Traits;
 
 use Hpkns\Picturesque\Picture;
 
