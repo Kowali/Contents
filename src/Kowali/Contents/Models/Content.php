@@ -2,7 +2,6 @@
 
 use \Dimsav\Translatable\Translatable;
 
-
 class Content extends StiBase {
 
     use Translatable,
@@ -161,5 +160,17 @@ class Content extends StiBase {
     public function terms()
     {
         return $this->belongsToMany('Kowali\Contents\Models\Term', 'content_term', 'content_id');
+    }
+
+    public function getPermalinkAttribute()
+    {
+        $content = str_plural(snake_case(class_basename($this)));
+        return route("{$content}.show", $this->id);
+    }
+
+    public function link($content)
+    {
+        $permalink = $this->getPermalinkAttribute();
+        return "<a href=\"{$permalink}\" rel=\"bookmark\">{$content}</a>";
     }
 }

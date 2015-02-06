@@ -11,10 +11,11 @@ class ContentsController extends \Controller {
     {
         $model = $this->getContenModel();
         $content_type = $this->getContentType(true);
-        $contents = (new $model)->newQuery()->orderBy('created_at', 'desc');
+        $contents = (new $model)->newQuery()->orderBy('created_at', 'desc')->paginate($this->getPagination());
 
-        return View::make("{$content_type}.index")->with([
-            $content_type => $contents->paginate($this->getPagination()),
+        return View::make($this->getView($content, str_plural( $content_type)))->with([
+            $content_type => $contents,
+            'contents' => $contents,
         ]);
     }
 
@@ -24,9 +25,35 @@ class ContentsController extends \Controller {
         $content_type = $this->getContentType();
         $content = (new $model)->newQuery()->find($id) or App::abord(404);
 
-        return \View::make(str_plural($content_type) . ".show")->with([
-            $content_type => $content
+        return View::make($this->getView($content, str_plural( $content_type)))->with([
+            $content_type => $content,
+            'content' => $content
         ]);
+    }
+
+    public function getView($content, $base, $is_index = false)
+    {
+        $tries = [];
+        if($is_index)
+        {
+            $tries[] = "{$base}.{$content->tid}.index";
+            $tries[] = "{$base}.index";
+            $tries[] = 'contents.index';
+        }
+        else
+        {
+            $tries[] = "{$base}.{$content->tid}.show";
+            $tries[] = "{$base}.show";
+            $tries[] = 'contents.show';
+        }
+
+        foreach($tries as $view)
+        {
+            if(View::exists($view))
+            {
+                return $view;
+            }
+        }
     }
 
     public function getContentType($plural = false, $model = null)

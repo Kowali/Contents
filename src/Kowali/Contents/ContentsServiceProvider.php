@@ -34,6 +34,10 @@ class ContentsServiceProvider extends ServiceProvider {
         $this->app->bindShared('kowali.commands.contents-taxonomies', function($app){
             return new Commands\ContentsTaxonomiesCommand;
         });
+
+        $this->app->bindShared('kowali.filter', function($app){
+            return new Filtering\FilterRepository;
+        });
     }
 
     /**

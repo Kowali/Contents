@@ -1,5 +1,7 @@
 <?php namespace Kowali\Contents\Models;
 
+use Filter;
+
 class ContentTranslation extends BaseModel {
 
     /**
@@ -25,4 +27,20 @@ class ContentTranslation extends BaseModel {
     {
         return $this->belongsTo($this->contentModel, 'content_id');
     }
+
+    public function getContentAttribute()
+    {
+        return apply_filter('content', $this->attributes['content'], [$this]);
+    }
+
+    public function getTitleAttribute()
+    {
+        return apply_filter('title', $this->attributes['title'], [$this]);
+    }
+
+    public function getExcerptAttribute()
+    {
+        return apply_filter('excerpt', $this->attributes['excerpt'], [$this]);
+    }
+
 }

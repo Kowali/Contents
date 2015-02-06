@@ -34,7 +34,7 @@ class Term extends BaseModel {
      *
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
-    protected function contents()
+    public function contents()
     {
         return $this->belongsToMany($this->contentModel);
     }
@@ -47,6 +47,20 @@ class Term extends BaseModel {
     public function children()
     {
         return $this->hasMany($this->getModel());
+    }
+
+    public function getPermalinkAttribute()
+    {
+        return route('taxonomy.term', [
+            'taxonomy' => $this->taxonomy->slug,
+            'term' => $this->slug,
+        ]);
+    }
+
+    public function link($content)
+    {
+        $permalink = $this->getPermalinkAttribute();
+        return "<a href=\"{$permalink}\" rel=\"bookmark\">{$content}</a>";
     }
 
 }

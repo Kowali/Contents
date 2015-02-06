@@ -2,6 +2,7 @@
 
 use Kowali\Contents\Models\Taxonomy;
 use Kowali\Contents\Models\Term;
+use Kowali\Contents\Models\Content;
 
 class ContentMigration extends Migration {
 
@@ -51,8 +52,9 @@ class ContentMigration extends Migration {
     public function migrateTerm($content, $taxonomy, $term)
     {
         $term = $this->getTaxonomyTerm($taxonomy, $term);
-        if($term)
+        if($term && ! $content->terms->contains($term))
         {
+
             $content->terms()->attach($term);
         }
     }
@@ -110,7 +112,7 @@ class ContentMigration extends Migration {
 
     public function getContent($tid)
     {
-        return $this->getContentModel()->newQuery()->where('tid', '=', $tid)
+        return Content::where('tid', '=', $tid)
             ->first();
     }
 
