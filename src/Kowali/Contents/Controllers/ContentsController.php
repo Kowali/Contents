@@ -1,6 +1,7 @@
 <?php namespace Kowali\Contents\Controllers;
 
 use Kowali\Contents\Models\Content;
+
 use \View;
 
 class ContentsController extends \Controller {
