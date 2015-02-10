@@ -8,6 +8,80 @@ use Kowali\Contents\Models\Meta;
 class ContentRepository {
 
     /**
+     * A list of known content types.
+     *
+     * @var array
+     */
+    protected $types = [];
+
+    /**
+     * Add many types in one pass.
+     *
+     * @param  array $types
+     * @return void
+     */
+    public function addTypes(array $types)
+    {
+        foreach($types as $name => $options)
+        {
+            $this->addType($name, $options);
+        }
+    }
+
+    /**
+     * Return an array containing the defined types.
+     *
+     * @return array
+     */
+    public function types()
+    {
+        return $this->types;
+    }
+
+    /**
+     * Find a content type with its name.
+     *
+     * @param  string $name
+     * @return ContentType
+     */
+    public function getType($name, $plural = false)
+    {
+        $name = $plural ? str_singular($name) : $name;
+
+        if(array_key_exists($name, $this->types))
+        {
+            return $this->types[$name];
+        }
+    }
+
+    /**
+     * Add one content type.
+     *
+     * @param  string $name
+     * @param  mixed  $options
+     * @return ContentType
+     */
+    public function addType($name, $options)
+    {
+        if(is_array($options))
+        {
+            $content = new ContentType($name, $options);
+        }
+        elseif($options instanceof ContentType)
+        {
+            $content = $options;
+        }
+        else
+        {
+            throw new \Exception('Type not defined');
+        }
+
+        $this->types[$name] = $content;
+
+        return $content;
+    }
+
+    /**
      * Find a content with its id.
      *
      * @param  string $id
@@ -31,6 +105,19 @@ class ContentRepository {
     public function getByTid($tid, $raw_query = false)
     {
         $query = Content::where('tid', '=', $tid);
+
+        return $raw_query ? $query : $query->first();
+    }
+
+    /**
+     * Return the posts associated with a user ID.
+     *
+     * @param  string $id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getByUserID($id, $raw_query = false)
+    {
+        $query = Content::where('user_id', '=', $id);
 
         return $raw_query ? $query : $query->first();
     }

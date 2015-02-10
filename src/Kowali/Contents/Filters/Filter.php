@@ -1,4 +1,4 @@
-<?php namespace Kowali\Contents\Filtering;
+<?php namespace Kowali\Contents\Filters;
 
 abstract class Filter {
 
@@ -21,7 +21,7 @@ abstract class Filter {
      * @param  array $attributes
      * @return bool
      */
-    public function qualifiedFor($content, array $attributes = [])
+    public function qualifiedFor($content, $attributes = null)
     {
         return true;
     }
@@ -32,6 +32,6 @@ abstract class Filter {
      * @param  array $attributes
      * @return bool
      */
-    abstract public function apply($content, array $attributes = []);
+    abstract public function apply($content, $attributes = null);
 
 }

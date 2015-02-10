@@ -1,4 +1,4 @@
-<?php namespace Kowali\Contents\Filtering;
+<?php namespace Kowali\Contents\Filters;
 
 class FilterStack {
 
@@ -19,8 +19,12 @@ class FilterStack {
      *
      * @return void
      */
-    public function unshift(Filter $filter)
+    public function unshift($filter)
     {
+        if(is_string($filter))
+        {
+            $filter = \App::make($filter);
+        }
         array_unshift($this->filters, $filter);
     }
 
@@ -29,8 +33,12 @@ class FilterStack {
      *
      * @return void
      */
-    public function push(Filter $filter)
+    public function push($filter)
     {
+        if(is_string($filter))
+        {
+            $filter = \App::make($filter);
+        }
         array_push($this->filters, $filter);
     }
 
@@ -40,7 +48,7 @@ class FilterStack {
      * @see    FilterStack::push()
      * @return void
      */
-    public function add(Filter $filter)
+    public function add($filter)
     {
         return $this->push($filter);
     }
@@ -63,11 +71,11 @@ class FilterStack {
      *
      * @return mixed
      */
-    public function apply($content, array $attributes = [])
+    public function apply($content, $attributes = null, $skip_tests = false)
     {
         foreach($this->filters as $filter)
         {
-            if($filter->qualifiedFor($attributes))
+            if($skip_tests || $filter->qualifiedFor($content, $attributes))
             {
                 $content = $filter->apply($content, $attributes);
             }

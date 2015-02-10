@@ -30,17 +30,17 @@ class ContentTranslation extends BaseModel {
 
     public function getContentAttribute()
     {
-        return apply_filter('content', $this->attributes['content'], [$this]);
+        return apply_filter('content', $this->attributes['content'], $this);
     }
 
     public function getTitleAttribute()
     {
-        return apply_filter('title', $this->attributes['title'], [$this]);
+        return apply_filter('title', $this->attributes['title'], $this);
     }
 
     public function getExcerptAttribute()
     {
-        return apply_filter('excerpt', $this->attributes['excerpt'], [$this]);
+        return apply_filter('excerpt', $this->attributes['excerpt'], $this);
     }
 
 }

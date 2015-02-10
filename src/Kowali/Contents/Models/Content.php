@@ -168,9 +168,19 @@ class Content extends StiBase {
         return route("{$content}.show", $this->id);
     }
 
-    public function link($content)
+    public function getDateAttribute()
+    {
+        return new \Date($this->attributes['created_at']);
+    }
+
+    public function getLink($content = "")
     {
         $permalink = $this->getPermalinkAttribute();
         return "<a href=\"{$permalink}\" rel=\"bookmark\">{$content}</a>";
+    }
+
+    public function getLinkAttribute()
+    {
+        return $this->getLink($this->title);
     }
 }

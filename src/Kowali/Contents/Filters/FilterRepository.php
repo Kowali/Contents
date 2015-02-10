@@ -1,4 +1,4 @@
-<?php namespace Kowali\Contents\Filtering;
+<?php namespace Kowali\Contents\Filters;
 
 class FilterRepository implements \ArrayAccess {
 

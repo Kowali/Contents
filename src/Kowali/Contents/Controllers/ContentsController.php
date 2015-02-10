@@ -1,34 +1,45 @@
 <?php namespace Kowali\Contents\Controllers;
 
 use Kowali\Contents\Models\Content;
-
-use \View;
+use Kowali\Contents\ContentRepository;
+use View;
+use Request;
+use Config;
 
 class ContentsController extends \Controller {
 
-    protected $contentModel = 'Kowali\Contents\Models\Content';
-
-    public function index()
+    public function __construct(ContentRepository $content)
     {
-        $model = $this->getContenModel();
-        $content_type = $this->getContentType(true);
-        $contents = (new $model)->newQuery()->orderBy('created_at', 'desc')->paginate($this->getPagination());
+        $this->content = $content;
+    }
 
-        return View::make($this->getView($content, str_plural( $content_type)))->with([
-            $content_type => $contents,
-            'contents' => $contents,
+    public function index($content_name = null)
+    {
+        $content_name = $content_name ?: Request::segment(1);
+        $content_type = $this->content->getType($content_name, true);
+        $model = $content_type->model;
+        $contents = (new $model)->orderBy('created_at', 'desc')->paginate($this->getPagination());
+
+        $view = $this->getView($contents, $content_type->name_plural, true);
+
+        return View::make($view)->with([
+            $content_type->name_plural => $contents,
+            'contents' => $contents
         ]);
     }
 
-    public function show($id)
+    public function show($id, $content_name = null)
     {
-        $model = $this->getContenModel();
-        $content_type = $this->getContentType();
-        $content = (new $model)->newQuery()->find($id) or App::abord(404);
+        $content_name = $content_name ?: Request::segment(1);
+        $content_type = $this->content->getType($content_name, true);
+        $model = $content_type->model;
+        $content = (new $model)->find($id) or App::abord(404);
 
-        return View::make($this->getView($content, str_plural( $content_type)))->with([
-            $content_type => $content,
-            'content' => $content
+        $view = $this->getView($content, $content_type->name_plural);
+
+        return View::make($view)->with([
+            $content_type->name => $content,
+            'content' => $content,
         ]);
     }
 
@@ -37,7 +48,6 @@ class ContentsController extends \Controller {
         $tries = [];
         if($is_index)
         {
-            $tries[] = "{$base}.{$content->tid}.index";
             $tries[] = "{$base}.index";
             $tries[] = 'contents.index';
         }
@@ -57,30 +67,21 @@ class ContentsController extends \Controller {
         }
     }
 
-    public function getContentType($plural = false, $model = null)
-    {
-        if(is_null($model))
-        {
-            $model = $this->getContenModel();
-        }
-
-        $type = snake_case(class_basename(new $model));
-
-        return $plural ? str_plural($type) : $type;
-    }
-
     /**
      * Return the model associated with the content.
      *
      * @return string
      */
-    public function getContenModel()
+    public function getContenModel($content_type = null)
     {
         if(isset($this->contentModel))
         {
             return $this->contentModel;
         }
-        return $this->getModel();
+        elseif($content_type)
+        {
+            return Config::get("kowali.content_types.{$content_type}.model", studly_case($content_type));
+        }
     }
 
     public function getPagination()
@@ -90,6 +91,6 @@ class ContentsController extends \Controller {
             return $this->pagination;
         }
 
-        return Config::get('contents.paginate', 5);
+        return \Config::get('contents.paginate', 5);
     }
 }

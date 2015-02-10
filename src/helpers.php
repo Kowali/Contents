@@ -10,10 +10,10 @@ if( ! function_exists('apply_filter'))
      * @param  mixed  $attributes
      * @return mixed
      */
-    function apply_filter($name, $content, $attributes = null)
+    function apply_filter($name, $content, $attributes = null, $skip_tests = false)
     {
         return \App::make('kowali.filter')->stack($name, true)
-            ->apply($content, $attributes);
+            ->apply($content, $attributes, $skip_tests);
     }
 }
 
