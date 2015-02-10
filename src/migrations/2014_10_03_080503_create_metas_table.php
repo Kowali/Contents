@@ -22,6 +22,7 @@ class CreateMetasTable extends Migration {
             $table->string('metaable_type');
             $table->integer('metaable_id')->unsigned();
 
+            $table->unique(['key', 'lang', 'metaable_type', 'metaable_id']);
             // Object behaviours
 			$table->timestamps();
 		});

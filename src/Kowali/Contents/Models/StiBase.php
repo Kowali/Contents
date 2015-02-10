@@ -7,7 +7,7 @@ class StiBase extends BaseModel {
      *
      * @var string
      */
-    protected $stiClassField = 'content_class';
+    protected $stiClassField = 'content_model';
 
     /**
      * Initialize the instance.
@@ -19,7 +19,10 @@ class StiBase extends BaseModel {
     {
         parent::__construct($attributes);
 
-        $this->setAttribute($this->stiClassField, get_class($this));
+        if( ! isset($attributes[$this->stiClassField]))
+        {
+            $this->setAttribute($this->stiClassField, get_class($this));
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php namespace Kowali\Contents\Models;
 
-class MenuItem extends Content {
+class Post extends Content {
 
 }
+
