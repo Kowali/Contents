@@ -49,6 +49,7 @@ class ContentsController extends \Controller {
 
     public function getFilteringTaxonomies(ContentType $content_type)
     {
+        $taxonomies = [];
         foreach((array)$content_type->taxonomies as $slug)
         {
             if($taxonomy = $this->content->getTaxonomy($slug))
