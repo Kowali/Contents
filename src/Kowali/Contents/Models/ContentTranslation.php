@@ -40,7 +40,16 @@ class ContentTranslation extends BaseModel {
 
     public function getExcerptAttribute()
     {
-        return apply_filter('excerpt', $this->attributes['excerpt'], $this);
+        if( ! isset($this->attributes['excerpt']) || empty($this->attributes['excerpt']))
+        {
+            $excerpt = smart_str_limit(strip_tags($this->content), 200);
+        }
+        else
+        {
+            $excerpt = $this->attributes['excerpt'];
+        }
+
+        return apply_filter('excerpt', $excerpt, $this);
     }
 
 }

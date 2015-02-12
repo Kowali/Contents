@@ -174,6 +174,12 @@ class ContentRepository {
         return Content::updateOrCreate(['tid' => $attributes['tid']], $attributes);
     }
 
+    public function getTaxonomy($slug, $raw_query = false)
+    {
+        $query = Taxonomy::whereSlug($slug);
+
+        return $raw_query ? $query : $query->first();
+    }
 
     public function addTerm($content, $taxonomy, $term = null)
     {

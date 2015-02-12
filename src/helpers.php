@@ -33,3 +33,27 @@ if( ! function_exists('add_filter'))
     }
 }
 
+
+if( ! function_exists('smart_str_limit'))
+{
+    /**
+     * Limit a string without breaking words using regex.
+     *
+     * @param  string $input
+     * @param  int    $length
+     * @return string
+     */
+    function smart_str_limit($input, $length, $termination = '…')
+    {
+        if(mb_strlen($input) < $length)
+        {
+            return $input;
+        }
+
+        $match = [];
+        if(preg_match('/^(.{0,' . $length . '})(?=\p{^L})/ums', $input, $match))
+        {
+            return $match[1] . $termination;
+        }
+    }
+}

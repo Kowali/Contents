@@ -22,23 +22,24 @@ class ContentsServiceProvider extends ServiceProvider {
 
         $contents->addTypes([
             'post'  => [
-                'model' => 'Kowali\Contents\Models\Post',
+                'model'      => 'Kowali\Contents\Models\Post',
                 'controller' => 'Kowali\Contents\Controllers\ContentsController',
+                'taxonomies' => ['category'],
             ],
             'page'  => [
-                'model' => 'Kowali\Contents\Models\Page',
+                'model'      => 'Kowali\Contents\Models\Page',
                 'controller' => 'Kowali\Contents\Controllers\ContentsController',
             ],
             'menu'  => [
-                'model' => 'Kowali\Contents\Models\Menu',
+                'model'      => 'Kowali\Contents\Models\Menu',
                 'controller' => 'Kowali\Contents\Controllers\ContentsController',
             ],
             'menu_item' => [
-                'model' => 'Kowali\Contents\Models\MenuItem',
+                'model'      => 'Kowali\Contents\Models\MenuItem',
                 'controller' => 'Kowali\Contents\Controllers\ContentsController',
             ],
             'link' => [
-                'model' => 'Kowali\Contents\Models\Link',
+                'model'      => 'Kowali\Contents\Models\Link',
                 'controller' => 'Kowali\Contents\Controllers\ContentsController',
             ],
         ]);

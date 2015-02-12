@@ -10,11 +10,25 @@ class ContentType {
     public $name;
 
     /**
-     * Options specific to the content type.
-     *
-     * @var array
+     * @var string
      */
-    protected $options;
+    private $model;
+
+    /**
+     * @var string
+     */
+    private $controller;
+
+    /**
+     * @var string
+     */
+    private $taxonomies;
+
+    protected $defaultOptions = [
+        'model'      => 'Kowali\Contents\Models\Content',
+        'controller' => 'Kowali\Contents\Controllers\ContentsController',
+        'taxonomies' => '',
+    ];
 
     /**
      * Initialize the instance.
@@ -25,8 +39,17 @@ class ContentType {
      */
     public function __construct($name, array $options = [])
     {
+        extract(
+            array_intersect_key(
+                array_merge($this->defaultOptions, $options),
+                $this->defaultOptions
+            )
+        );
+
         $this->name = $name;
-        $this->options = $options;
+        $this->model = $model;
+        $this->controller = $controller;
+        $this->taxonomies = $taxonomies;
     }
 
 
@@ -37,18 +60,17 @@ class ContentType {
 
     public function getModel()
     {
-        if(isset($this->options['model']))
-        {
-            return $this->options['model'];
-        }
+        return $this->model;
     }
 
     public function getController()
     {
-        if(isset($this->options['controller']))
-        {
-            return $this->options['controller'];
-        }
+        return $this->controller;
+    }
+
+    public function getTaxonomies()
+    {
+        return $this->taxonomies;
     }
 
     /**
@@ -58,6 +80,7 @@ class ContentType {
     public function __get($key)
     {
         $method = camel_case("get_{$key}");
+
         if(method_exists($this, $method))
         {
             return $this->$method();
