@@ -30,24 +30,31 @@ class ContentTranslation extends BaseModel {
 
     public function getContentAttribute()
     {
-        return apply_filter('content', $this->attributes['content'], $this);
+        if(array_key_exists('content', $this->attributes))
+        {
+            return apply_filter('content', $this->attributes['content'], $this);
+        }
     }
 
     public function getTitleAttribute()
     {
-        return apply_filter('title', $this->attributes['title'], $this);
+        if(array_key_exists('title', $this->attributes))
+        {
+            return apply_filter('title', $this->attributes['title'], $this);
+        }
     }
 
     public function getExcerptAttribute()
     {
-        if( ! isset($this->attributes['excerpt']) || empty($this->attributes['excerpt']))
-        {
-            $excerpt = smart_str_limit(strip_tags($this->content), 200);
-        }
-        else
+        if(array_key_exists('excerpt', $this->attributes) && ! empty($this->attributes['excerpt']))
         {
             $excerpt = $this->attributes['excerpt'];
         }
+        elseif(array_key_exists('content', $this->attributes) && ! empty($this->attributes['content']))
+        {
+            $excerpt = smart_str_limit(strip_tags($this->attributes['content']), 200);
+        }
+        else return;
 
         return apply_filter('excerpt', $excerpt, $this);
     }
