@@ -89,7 +89,7 @@ class Content extends StiBase {
      */
     public function children()
     {
-        return $this->hasMany($this->stiBaseClass, 'content_id');
+        return $this->hasMany($this->stiBaseClass, 'content_id')->orderBy('order', 'asc');
     }
 
     /**
@@ -173,14 +173,39 @@ class Content extends StiBase {
         return new \Date($this->attributes['created_at']);
     }
 
-    public function getLink($content = "")
+    public function getLink($content = null, $attributes = [])
     {
-        $permalink = $this->getPermalinkAttribute();
-        return "<a href=\"{$permalink}\" rel=\"bookmark\">{$content}</a>";
+        if($content === null)
+        {
+            $content = $this->title;
+        }
+        $attributes = \HTML::attributes(array_merge([
+            'href'  => $this->getPermalinkAttribute(),
+            'rel'   => 'bookmark'
+        ], $attributes));
+        return "<a {$attributes}>{$content}</a>";
     }
 
     public function getLinkAttribute()
     {
         return $this->getLink($this->title);
+    }
+
+    public function getAgoAttribute()
+    {
+        return (new \Date($this->attributes['created_at']))->diffForHumans();
+    }
+
+    public function getTags($format = '<span><a href=":url">:name</a></span>', $route = 'posts.index')
+    {
+        $terms = $this->terms->map(function($t) use ($format, $route){
+            $ts = $t->taxonomy->slug;
+            return str_replace([':url', ':name'], [
+                route($route, ['filter' => $ts, $ts => $t->slug]),
+                $t->name
+            ], $format);
+        })->toArray();
+
+        return implode(', ', $terms);
     }
 }

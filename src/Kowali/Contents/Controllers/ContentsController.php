@@ -10,41 +10,70 @@ use Input;
 
 class ContentsController extends \Controller {
 
+    /**
+     * @var
+     */
+    protected $filterTerm;
+
+    /**
+     * Initialize the instance.
+     *
+     * @param  \Kowali\Contents\ContentRepository
+     * @return void
+     */
     public function __construct(ContentRepository $content)
     {
         $this->content = $content;
     }
 
+    /**
+     * Return a list of contents.
+     *
+     * @param  string $content_name
+     * @return \Response
+     */
     public function index($content_name = null)
     {
         $content_name = $content_name ?: Request::segment(1);
         $content_type = $this->content->getType($content_name, true);
         $model = $content_type->model;
 
-        $query = (new $model)->orderBy('created_at', 'desc');
-
-        $term = null;
-
-        if(Input::has('filter') && Input::has(Input::get('filter')))
-        {
-            $taxonomy = Input::get('filter');
-            $term = $this->content->getTaxonomyTerm($taxonomy, Input::get($taxonomy));
-            $query->whereIn('id', function($query) use ($term){
-                $query->select('content_id')->from('content_term')->where('term_id', $term->id);
-            });
-        }
+        $query = $this->filterQuery((new $model)->orderBy('created_at', 'desc'));
 
         $contents = $query->paginate($this->getPagination());
 
         $view = $this->getView($contents, $content_type->name_plural, true);
 
-
         return View::make($view)->with([
             $content_type->name_plural  => $contents,
             'contents'                  => $contents,
-            'taxonomies'                => $this->getFilteringTaxonomies($content_type),
-            'term'                      => $term,
+            'filters'                   => $this->getFilteringTaxonomies($content_type),
+            'filter'                    => $this->filterTerm,
         ]);
+    }
+
+    /**
+     * If a filter is present, fitler the contents accordingly.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function filterQuery(\Illuminate\Database\Eloquent\Builder $query)
+    {
+        if(Input::has('filter') && Input::has(Input::get('filter')))
+        {
+            $taxonomy = Input::get('filter');
+            $term = $this->content->getTaxonomyTerm($taxonomy, Input::get($taxonomy));
+            if($term)
+            {
+                $this->filterTerm = $term;
+                $query->whereIn('id', function($query) use ($term){
+                    $query->select('content_id')->from('content_term')->where('term_id', $term->id);
+                });
+            }
+        }
+
+        return $query;
     }
 
     public function getFilteringTaxonomies(ContentType $content_type)
@@ -116,6 +145,10 @@ class ContentsController extends \Controller {
         }
     }
 
+    /**
+     * Return the pagination
+     *
+     */
     public function getPagination()
     {
         if(isset($this->pagination))
