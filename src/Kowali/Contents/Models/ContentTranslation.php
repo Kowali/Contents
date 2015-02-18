@@ -50,9 +50,9 @@ class ContentTranslation extends BaseModel {
         {
             $excerpt = $this->attributes['excerpt'];
         }
-        elseif(array_key_exists('content', $this->attributes) && ! empty($this->attributes['content']))
+        elseif($content = $this->content)
         {
-            $excerpt = smart_str_limit(strip_tags($this->attributes['content']), 200);
+            $excerpt = smart_str_limit(strip_tags($content), 300);
         }
         else return;
 

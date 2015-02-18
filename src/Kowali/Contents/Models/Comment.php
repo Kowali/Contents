@@ -18,7 +18,7 @@ class Comment extends \Eloquent {
      */
     public function author()
     {
-        return $this->belongsTo($this->getUserModel(), 'user_id');
+        return $this->belongsTo(\Config::get('auth.model'), 'user_id');
     }
 
     /**
@@ -39,5 +39,13 @@ class Comment extends \Eloquent {
     public function children()
     {
         return $this->hasMany($this->getModel());
+    }
+
+    /**
+     *
+     */
+    public function commentable()
+    {
+        return $this->morphTo();
     }
 }

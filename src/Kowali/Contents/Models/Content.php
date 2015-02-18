@@ -149,7 +149,7 @@ class Content extends StiBase {
      */
     public function comments()
     {
-        return $this->morphMany('Kowali\Contents\Models\Comment','commentable')->orderBy('created_at', 'ASC');
+        return $this->morphMany('Kowali\Contents\Models\Comment', 'commentable')->orderBy('created_at', 'ASC');
     }
 
     /**
